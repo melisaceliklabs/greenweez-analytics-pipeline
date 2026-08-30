@@ -2,15 +2,13 @@ version: 2
 
 sources:
   - name: raw
+    database: greenweez-507113
     schema: gz_raw_data
     description: "Greenweez ham veri tabloları - sepet analizi kaynağı"
     tables:
       - name: sales
         identifier: raw_gz_sales
-        description: "Sipariş satırı düzeyinde günlük satışlar"
       - name: product
         identifier: raw_gz_product
-        description: "Ürün bazlı satın alma fiyatları"
       - name: ship
         identifier: raw_gz_ship
-        description: "Sipariş bazlı nakliye ve operasyonel maliyetler"
