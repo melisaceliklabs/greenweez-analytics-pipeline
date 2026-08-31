@@ -1,0 +1,57 @@
+version: 2
+
+sources:
+  - name: raw
+    database: greenweez-507113
+    schema: gz_raw_data
+    description: Greenweez ham veri tabloları - sepet analizi kaynağı
+    tables:
+      - name: sales
+        identifier: raw_gz_sales
+        description: Greenweez satışları / her orders_id içindeki her products_id için bir satır
+        config:
+          loaded_at_field: "CAST(date_date AS TIMESTAMP)"
+          freshness:
+            warn_after: {count: 90, period: day}
+        columns:
+          - name: date_date
+            description: satın alma tarihi
+          - name: orders_id
+            description: sipariş kimliği
+          - name: pdt_id
+            description: ürün kimliği
+          - name: revenue
+            description: satış satırının geliri
+          - name: quantity
+            description: satılan ürün adedi
+        tests:
+          - unique:
+              column_name: "concat(cast(orders_id as string), '-', cast(pdt_id as string))"
+
+      - name: product
+        identifier: raw_gz_product
+        description: Greenweez ürün kataloğu / her ürün için bir satır
+        columns:
+          - name: products_id
+            description: ürün kimliği - birincil anahtar
+            tests:
+              - unique
+              - not_null
+          - name: purchSE_PRICE
+            description: ürünün satın alma fiyatı (kaynakta yazım hatalı, staging'de düzeltiliyor)
+
+      - name: ship
+        identifier: raw_gz_ship
+        description: Greenweez nakliye bilgileri / her sipariş için bir satır
+        columns:
+          - name: orders_id
+            description: sipariş kimliği - birincil anahtar
+            tests:
+              - unique
+              - not_null
+          - name: shipping_fee
+            description: müşterinin nakliye için ödediği tutar
+          - name: logCost
+            description: lojistik maliyeti
+          - name: ship_cost
+            description: nakliye maliyeti (kaynakta STRING, staging'de FLOAT64'e çevriliyor)
