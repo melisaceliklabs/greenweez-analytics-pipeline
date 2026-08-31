@@ -40,6 +40,8 @@ They also set four requirements for *how* the pipeline should be built:
 
 ## Architecture
 
+![Pipeline lineage](docs/lineage.png)
+
 The pipeline follows a **bronze → silver → gold** (medallion) layering pattern:
 
 ```
